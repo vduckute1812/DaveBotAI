@@ -4,7 +4,17 @@
 
 int main()
 {
+    Matrix A(3, 2, true);
+    Matrix B(3, 2, true);
+    Matrix C = A*B;
+    std::cout << C;
 
-	getchar();
+    Matrix D = C.T();
+    std::cout << D;
+
+    Matrix E = A.Dot(D);
+    std::cout << E;
+
+    getchar();
 	return 0;
 }

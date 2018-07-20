@@ -1,5 +1,11 @@
 #include "Matrix.h"
 
+Matrix::Matrix()
+{
+    this->m_numRow = 0;
+    this->m_numCol = 0;
+}
+
 void Matrix::GenerateRandomData(bool isRandom)
 {
 	std::vector<double> tmp_datas;
@@ -199,4 +205,17 @@ void Matrix::PrintToConsole()
 		}
 		std::cout << std::endl;
 	}
+}
+
+const std::ostream &operator << (std::ostream &out, const Matrix &mat){
+    out << std::endl << "=====MATRIX VALUE======" << std::endl;
+    for (int i = 0; i < mat.GetNumRow(); i++)
+    {
+        for (int j = 0; j < mat.GetNumCol(); j++)
+        {
+            out << mat.GetValue(i, j) << " ";
+        }
+        out << std::endl;
+    }
+    return out;
 }

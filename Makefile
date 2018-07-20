@@ -50,16 +50,14 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = Vector.cpp \
-		Node.cpp \
-		NeuralNetwork.cpp \
+SOURCES       = NeuralNetwork.cpp \
 		Matrix.cpp \
-		main.cpp 
-OBJECTS       = Vector.o \
-		Node.o \
-		NeuralNetwork.o \
+		main.cpp \
+		layer.cpp 
+OBJECTS       = NeuralNetwork.o \
 		Matrix.o \
-		main.o
+		main.o \
+		layer.o
 DIST          = ../../Qt/5.10.1/gcc_64/mkspecs/features/spec_pre.prf \
 		../../Qt/5.10.1/gcc_64/mkspecs/common/unix.conf \
 		../../Qt/5.10.1/gcc_64/mkspecs/common/linux.conf \
@@ -241,14 +239,12 @@ DIST          = ../../Qt/5.10.1/gcc_64/mkspecs/features/spec_pre.prf \
 		../../Qt/5.10.1/gcc_64/mkspecs/features/exceptions.prf \
 		../../Qt/5.10.1/gcc_64/mkspecs/features/yacc.prf \
 		../../Qt/5.10.1/gcc_64/mkspecs/features/lex.prf \
-		AIBotDave.pro Vector.h \
-		Node.h \
-		NeuralNetwork.h \
-		Matrix.h Vector.cpp \
-		Node.cpp \
-		NeuralNetwork.cpp \
+		AIBotDave.pro NeuralNetwork.h \
+		Matrix.h \
+		layer.h NeuralNetwork.cpp \
 		Matrix.cpp \
-		main.cpp
+		main.cpp \
+		layer.cpp
 QMAKE_TARGET  = AIBotDave
 DESTDIR       = 
 TARGET        = AIBotDave
@@ -642,8 +638,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents ../../Qt/5.10.1/gcc_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents Vector.h Node.h NeuralNetwork.h Matrix.h $(DISTDIR)/
-	$(COPY_FILE) --parents Vector.cpp Node.cpp NeuralNetwork.cpp Matrix.cpp main.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents NeuralNetwork.h Matrix.h layer.h $(DISTDIR)/
+	$(COPY_FILE) --parents NeuralNetwork.cpp Matrix.cpp main.cpp layer.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -691,12 +687,6 @@ compiler_clean: compiler_moc_predefs_clean
 
 ####### Compile
 
-Vector.o: Vector.cpp Vector.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Vector.o Vector.cpp
-
-Node.o: Node.cpp Node.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Node.o Node.cpp
-
 NeuralNetwork.o: NeuralNetwork.cpp NeuralNetwork.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o NeuralNetwork.o NeuralNetwork.cpp
 
@@ -705,6 +695,9 @@ Matrix.o: Matrix.cpp Matrix.h
 
 main.o: main.cpp Matrix.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
+
+layer.o: layer.cpp layer.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o layer.o layer.cpp
 
 ####### Install
 

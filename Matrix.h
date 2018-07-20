@@ -12,7 +12,8 @@ private:
 	int m_numCol;
 	void GenerateRandomData(bool isRandom);
 public:
-	Matrix(int numRow, int numCol, bool isRandom);
+    Matrix();
+    Matrix(int numRow, int numCol, bool isRandom);
 	Matrix(const std::vector<std::vector< double > >& datas);
 	Matrix(const Matrix& mat);
 	~Matrix();
@@ -26,7 +27,10 @@ public:
     Matrix operator*(const Matrix& mat);
 	Matrix operator*(const double& alpha);
 	Matrix operator+(const Matrix& mat);
-	double GetValue(int r, int c) const;
+    Matrix operator=(const Matrix& mat);
+    double GetValue(int r, int c) const;
+
+    friend const std::ostream &operator << (std::ostream &out, const Matrix& mat);
 };
 
 #endif
