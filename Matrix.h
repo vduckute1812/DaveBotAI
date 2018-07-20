@@ -14,7 +14,8 @@ private:
 public:
     Matrix();
     Matrix(int numRow, int numCol, bool isRandom);
-	Matrix(const std::vector<std::vector< double > >& datas);
+    Matrix(const std::vector< double> & data);
+    Matrix(const std::vector<std::vector< double > >& datas);
 	Matrix(const Matrix& mat);
 	~Matrix();
 	int GetNumRow() const;
@@ -31,6 +32,7 @@ public:
     void operator=(const Matrix& mat);
 
     double GetValue(int r, int c) const;
+    void TransToOneHot(int numClasses);
 
     friend const std::ostream &operator << (std::ostream &out, const Matrix& mat);
 };

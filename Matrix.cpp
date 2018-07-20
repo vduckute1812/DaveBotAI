@@ -36,7 +36,16 @@ Matrix::Matrix(int numRow, int numCol, bool isRandom)
 	GenerateRandomData(isRandom);
 }
 
-Matrix::Matrix(const std::vector<std::vector<double>>& datas)
+Matrix::Matrix(const std::vector< double> & data)
+{
+    m_numRow = 1;
+    m_numCol = static_cast<int>(data.size());
+
+    m_datas.push_back(data);
+}
+
+
+Matrix::Matrix(const std::vector<std::vector<double> >& datas)
 {
 	m_numRow = static_cast<int>(datas.size());
 	m_numCol = static_cast<int>(datas[0].size());
@@ -54,7 +63,6 @@ Matrix::Matrix(const std::vector<std::vector<double>>& datas)
 
 Matrix::Matrix(const Matrix & mat)
 {
-    std::cout << "I hope it don't come here" << std::endl;
     m_numRow = mat.GetNumRow();
 	m_numCol = mat.GetNumCol();
 	std::vector<double> tmp_datas;
@@ -224,7 +232,6 @@ Matrix Matrix::operator+(const Matrix & mat)
 
 void Matrix::operator = (const Matrix& mat)
 {
-    std::cout << "I hope it don't come here" << std::endl;
     std::vector<double> tmp_datas;
 
     m_numRow = mat.GetNumRow();
@@ -245,4 +252,22 @@ void Matrix::operator = (const Matrix& mat)
 void Matrix::Type() const
 {
     std::cout << "(" << GetNumRow() << ", " << GetNumCol() << ")" << std::endl;
+}
+
+void Matrix::TransToOneHot(int numClasses)
+{
+    if(this->GetNumRow() != 1)
+    {
+        std::cout<<"Can't transform this matrix to OneHotLabel";
+    }
+    else
+    {
+        Matrix result(numClasses, this->GetNumCol(), false);
+        result.Type();
+        for(int i=0; i < this->GetNumCol(); ++i)
+        {
+            result.SetValue(m_datas[0][i], i, 1.0);
+        }
+        (*this) = result;
+    }
 }

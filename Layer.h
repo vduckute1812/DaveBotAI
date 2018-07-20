@@ -1,6 +1,7 @@
 #ifndef LAYER_H
 #define LAYER_H
 #include "Matrix.h"
+#include <math.h>
 
 struct Node
 {
@@ -17,9 +18,20 @@ private:
     Matrix Z;       // [d(l), 1] It's a vector with d(l) elements
     Matrix A;       // [d(l), 1] It's a vector with d(l) elements
     Matrix Y;       // [d(l), 1] It's a vector with d(l) elements
+    int m_numClass;
+    int GetMaxLabels() const;
 public:
     // Input Layer
-    Layer(Matrix pointData, Matrix label);
+    Layer(const Matrix& pointData, const Matrix& label);
+    void CalcSoftmaxFunc();
+
+    void SetLabels(const Matrix& mat);
+    void SetLabels(const std::vector<double>& labels);
+    Matrix GetBias() const;
+    Matrix GetDatas() const;
+    Matrix GetLabels() const;
+    Matrix GetWeights() const;
+    int GetNumClass() const;
 };
 
 #endif // LAYER_H

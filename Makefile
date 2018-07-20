@@ -53,11 +53,11 @@ OBJECTS_DIR   = ./
 SOURCES       = NeuralNetwork.cpp \
 		Matrix.cpp \
 		main.cpp \
-		layer.cpp 
+		Layer.cpp 
 OBJECTS       = NeuralNetwork.o \
 		Matrix.o \
 		main.o \
-		layer.o
+		Layer.o
 DIST          = ../../Qt/5.10.1/gcc_64/mkspecs/features/spec_pre.prf \
 		../../Qt/5.10.1/gcc_64/mkspecs/common/unix.conf \
 		../../Qt/5.10.1/gcc_64/mkspecs/common/linux.conf \
@@ -241,10 +241,10 @@ DIST          = ../../Qt/5.10.1/gcc_64/mkspecs/features/spec_pre.prf \
 		../../Qt/5.10.1/gcc_64/mkspecs/features/lex.prf \
 		AIBotDave.pro NeuralNetwork.h \
 		Matrix.h \
-		layer.h NeuralNetwork.cpp \
+		Layer.h NeuralNetwork.cpp \
 		Matrix.cpp \
 		main.cpp \
-		layer.cpp
+		Layer.cpp
 QMAKE_TARGET  = AIBotDave
 DESTDIR       = 
 TARGET        = AIBotDave
@@ -638,8 +638,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents ../../Qt/5.10.1/gcc_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents NeuralNetwork.h Matrix.h layer.h $(DISTDIR)/
-	$(COPY_FILE) --parents NeuralNetwork.cpp Matrix.cpp main.cpp layer.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents NeuralNetwork.h Matrix.h Layer.h $(DISTDIR)/
+	$(COPY_FILE) --parents NeuralNetwork.cpp Matrix.cpp main.cpp Layer.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -696,8 +696,9 @@ Matrix.o: Matrix.cpp Matrix.h
 main.o: main.cpp Matrix.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
 
-layer.o: layer.cpp layer.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o layer.o layer.cpp
+Layer.o: Layer.cpp Layer.h \
+		Matrix.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Layer.o Layer.cpp
 
 ####### Install
 
