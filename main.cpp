@@ -15,6 +15,12 @@ int main()
     Matrix E = A.Dot(D);
     std::cout << E;
 
+    Matrix F;
+    F = E;
+    std::cout<< F;
+
+    F.Type();
+
     getchar();
 	return 0;
 }

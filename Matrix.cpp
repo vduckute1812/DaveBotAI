@@ -54,10 +54,11 @@ Matrix::Matrix(const std::vector<std::vector<double>>& datas)
 
 Matrix::Matrix(const Matrix & mat)
 {
-	m_numRow = mat.GetNumRow();
+    std::cout << "I hope it don't come here" << std::endl;
+    m_numRow = mat.GetNumRow();
 	m_numCol = mat.GetNumCol();
 	std::vector<double> tmp_datas;
-	for (size_t i = 0; i < m_numRow; i++)
+    for (int i = 0; i < m_numRow; i++)
 	{
 		for (int j = 0; j < m_numCol; j++)
 		{
@@ -75,6 +76,47 @@ Matrix::~Matrix()
 void Matrix::SetValue(int r, int c, double data)
 {
 	m_datas[r][c] = data;
+}
+
+double Matrix::GetValue(int r, int c) const
+{
+    return m_datas[r][c];
+}
+
+int Matrix::GetNumRow() const
+{
+    return m_numRow;
+}
+
+int Matrix::GetNumCol() const
+{
+    return m_numCol;
+}
+
+void Matrix::PrintToConsole()
+{
+    std::cout << std::endl << "=====MATRIX VALUE======" << std::endl;
+    for (int i = 0; i < m_numRow; i++)
+    {
+        for (int j = 0; j < m_numCol; j++)
+        {
+            std::cout << m_datas[i][j] << " ";
+        }
+        std::cout << std::endl;
+    }
+}
+
+const std::ostream &operator << (std::ostream &out, const Matrix &mat){
+    out << std::endl << "=====MATRIX VALUE======" << std::endl;
+    for (int i = 0; i < mat.GetNumRow(); i++)
+    {
+        for (int j = 0; j < mat.GetNumCol(); j++)
+        {
+            out << mat.GetValue(i, j) << " ";
+        }
+        out << std::endl;
+    }
+    return out;
 }
 
 Matrix Matrix::Dot(const Matrix& mat)
@@ -179,43 +221,28 @@ Matrix Matrix::operator+(const Matrix & mat)
 	return result;
 }
 
-double Matrix::GetValue(int r, int c) const
-{
-	return m_datas[r][c];
-}
 
-int Matrix::GetNumRow() const
+void Matrix::operator = (const Matrix& mat)
 {
-	return m_numRow;
-}
+    std::cout << "I hope it don't come here" << std::endl;
+    std::vector<double> tmp_datas;
 
-int Matrix::GetNumCol() const
-{
-	return m_numCol;
-}
+    m_numRow = mat.GetNumRow();
+    m_numCol = mat.GetNumCol();
+    m_datas.clear();
 
-void Matrix::PrintToConsole()
-{
-	std::cout << std::endl << "=====MATRIX VALUE======" << std::endl;
-	for (int i = 0; i < m_numRow; i++)
-	{
-		for (int j = 0; j < m_numCol; j++)
-		{
-			std::cout << m_datas[i][j] << " ";
-		}
-		std::cout << std::endl;
-	}
-}
-
-const std::ostream &operator << (std::ostream &out, const Matrix &mat){
-    out << std::endl << "=====MATRIX VALUE======" << std::endl;
-    for (int i = 0; i < mat.GetNumRow(); i++)
+    for(int i = 0; i < mat.GetNumRow(); ++i )
     {
-        for (int j = 0; j < mat.GetNumCol(); j++)
+        for(int j =0; j < mat.GetNumCol(); ++j)
         {
-            out << mat.GetValue(i, j) << " ";
+            tmp_datas.push_back(mat.GetValue(i, j));
         }
-        out << std::endl;
+        m_datas.push_back(tmp_datas);
+        tmp_datas.clear();
     }
-    return out;
+}
+
+void Matrix::Type() const
+{
+    std::cout << "(" << GetNumRow() << ", " << GetNumCol() << ")" << std::endl;
 }

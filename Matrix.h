@@ -21,13 +21,15 @@ public:
 	int GetNumCol() const;
 	void PrintToConsole();
 	void SetValue(int r, int c, double data);
+    void Type() const;
 
     Matrix T();
     Matrix Dot(const Matrix& mat);
     Matrix operator*(const Matrix& mat);
 	Matrix operator*(const double& alpha);
 	Matrix operator+(const Matrix& mat);
-    Matrix operator=(const Matrix& mat);
+    void operator=(const Matrix& mat);
+
     double GetValue(int r, int c) const;
 
     friend const std::ostream &operator << (std::ostream &out, const Matrix& mat);
