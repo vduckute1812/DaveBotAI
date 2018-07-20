@@ -20,7 +20,10 @@ public:
 	int GetNumCol() const;
 	void PrintToConsole();
 	void SetValue(int r, int c, double data);
-	Matrix operator*(const Matrix& mat);
+
+    Matrix T();
+    Matrix Dot(const Matrix& mat);
+    Matrix operator*(const Matrix& mat);
 	Matrix operator*(const double& alpha);
 	Matrix operator+(const Matrix& mat);
 	double GetValue(int r, int c) const;

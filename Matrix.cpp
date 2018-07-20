@@ -71,31 +71,67 @@ void Matrix::SetValue(int r, int c, double data)
 	m_datas[r][c] = data;
 }
 
+Matrix Matrix::Dot(const Matrix& mat)
+{
+    Matrix result(this->GetNumRow(), mat.GetNumCol(), false);
+    double data;
+
+    if (this->GetNumCol() != mat.GetNumRow())
+    {
+        std::cout << "Can't dot (" << this->GetNumRow() << ", " << this->GetNumCol()
+            << ") * (" << mat.GetNumRow() << ", " << mat.GetNumCol() <<")" << std::endl;
+        return result;
+    }
+
+    for (int i = 0; i < this->GetNumRow(); i++)
+    {
+        for (int j = 0; j < this->GetNumCol(); j++)
+        {
+            for (int k = 0; k < mat.GetNumCol(); k++)
+            {
+                data = result.GetValue(i, k);
+                data += m_datas[i][j] * mat.GetValue(j, k);
+                result.SetValue(i, k, data);
+            }
+        }
+    }
+    return result;
+}
+
+Matrix Matrix::T()
+{
+    Matrix result(this->GetNumCol(), this->GetNumRow(), false);
+
+    for(int i=0; i < this->GetNumRow(); ++i)
+    {
+        for(int j=0; j<this->GetNumCol(); ++j)
+        {
+            result.SetValue(j, i, m_datas[i][j]);
+        }
+    }
+    return result;
+}
+
 Matrix Matrix::operator*(const Matrix & mat)
 {
-	Matrix result(this->GetNumRow(), mat.GetNumCol(), false);
-	double data;
+    Matrix result(this->GetNumRow(), this->GetNumCol(), false);
+    double data;
+    if (this->GetNumRow() != mat.GetNumRow() && this->GetNumCol() != mat.GetNumCol())
+    {
+        std::cout << "Can't multiply (" << this->GetNumRow() << ", " << this->GetNumCol()
+            << ") * (" << mat.GetNumRow() << ", " << mat.GetNumCol() <<")" << std::endl;
+        return result;
+    }
 
-	if (this->GetNumCol() != mat.GetNumRow())
-	{
-		std::cout << "Can't multiply (" << this->GetNumRow() << ", " << this->GetNumCol()
-			<< ") * (" << mat.GetNumRow() << ", " << mat.GetNumCol() <<")" << std::endl;
-		return result;
-	}
-
-	for (int i = 0; i < this->GetNumRow(); i++)
-	{
-		for (int j = 0; j < this->GetNumCol(); j++)
-		{
-			for (int k = 0; k < mat.GetNumCol(); k++)
-			{
-				data = result.GetValue(i, k);
-				data += m_datas[i][j] * mat.GetValue(j, k);
-				result.SetValue(i, k, data);
-			}
-		}
-	}
-	return result;
+    for(int i=0; i < this->GetNumRow(); ++i)
+    {
+        for(int j=0; j<this->GetNumCol(); ++j)
+        {
+            data = m_datas[i][j]*mat.GetValue(i,j);
+            result.SetValue(i, j, data);
+        }
+    }
+    return result;
 }
 
 Matrix Matrix::operator*(const double & _alpha)
