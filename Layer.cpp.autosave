@@ -31,7 +31,7 @@ Layer::Layer(const Matrix& pointData, int numNextNode, bool isFinal)
 
     std::cout << "A::: ";
     if(isFinal)
-        A = SoftMax(Z);
+     x   A = SoftMax(Z);
     else{
         A = ReLuFunc(Z);
     }

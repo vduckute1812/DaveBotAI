@@ -3,35 +3,37 @@
 #include "Matrix.h"
 #include <math.h>
 
-struct Node
-{
-    Node() {}
-};
-
 class Layer
 {
 private:
     // Z = W.T*X + b
     // A = f(Z)
-    Matrix b;       // [d(l), 1] We separate it in W. It's useful with weight decay way for avoiding overfitting.
-    Matrix W;       // [d(l-1), d(l)] It's a matrix
-    Matrix Z;       // [d(l), 1] It's a vector with d(l) elements
-    Matrix A;       // [d(l), 1] It's a vector with d(l) elements
-    Matrix Y;       // [d(l), 1] It's a vector with d(l) elements
-    int m_numClass;
-    int GetMaxLabels() const;
-public:
-    // Input Layer
-    Layer(const Matrix& pointData, const Matrix& label);
-    void CalcSoftmaxFunc();
+    Matrix b;       // [C, 1] We separate it in W. It's useful with weight decay way for avoiding overfitting.
+    Matrix W;       // [N, C] It's a matrix
+    Matrix X;       // [N, d]
+    Matrix Z;       // [C, d] It's a vector with d(l) elements
+    Matrix A;       // [C, d] It's a vector with d(l) elements
 
-    void SetLabels(const Matrix& mat);
-    void SetLabels(const std::vector<double>& labels);
+    int m_numDim;
+    int m_numNodes;
+
+    // Rectified linear unit function (ReLU)
+    Matrix ReLuFunc(const Matrix& mat);
+    Matrix SoftMax(const Matrix& mat);
+public:
+    Layer();
+    Layer(const Matrix& pointData, int numNextNode, bool isFinal = false);
+
+    void SetBias(const Matrix&);
+    void SetDatas(const Matrix&);
+    void SetWeights(const Matrix&);
+    void SetNumNode(int numNode);
+
     Matrix GetBias() const;
     Matrix GetDatas() const;
-    Matrix GetLabels() const;
     Matrix GetWeights() const;
-    int GetNumClass() const;
+    Matrix GetActFuncVal() const;
+    int GetNumNode() const;
 };
 
 #endif // LAYER_H

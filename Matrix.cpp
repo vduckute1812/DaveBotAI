@@ -8,7 +8,7 @@ Matrix::Matrix()
 
 void Matrix::GenerateRandomData(bool isRandom)
 {
-	std::vector<double> tmp_datas;
+    std::vector<double> tmp_datas;
 	double rand_value;
 	for (int i = 0; i < m_numRow; i++)
 	{
@@ -114,19 +114,6 @@ void Matrix::PrintToConsole()
     }
 }
 
-const std::ostream &operator << (std::ostream &out, const Matrix &mat){
-    out << std::endl << "=====MATRIX VALUE======" << std::endl;
-    for (int i = 0; i < mat.GetNumRow(); i++)
-    {
-        for (int j = 0; j < mat.GetNumCol(); j++)
-        {
-            out << mat.GetValue(i, j) << " ";
-        }
-        out << std::endl;
-    }
-    return out;
-}
-
 Matrix Matrix::Dot(const Matrix& mat)
 {
     Matrix result(this->GetNumRow(), mat.GetNumCol(), false);
@@ -211,24 +198,96 @@ Matrix Matrix::operator+(const Matrix & mat)
 	Matrix result(this->GetNumRow(), this->GetNumCol(), false);
 	double data;
 
-	if (this->GetNumCol() != mat.GetNumCol() && this->GetNumRow() != mat.GetNumRow())
+    if (this->GetNumCol() == mat.GetNumCol() && this->GetNumRow() == mat.GetNumRow())
 	{
-		std::cout << "Can't add (" << this->GetNumRow() << ", " << this->GetNumCol()
-			<< ") * (" << mat.GetNumRow() << ", " << mat.GetNumCol() << ")" << std::endl;
-		return result;
+        for (int i = 0; i < this->GetNumRow(); i++)
+        {
+            for (int j = 0; j < this->GetNumCol(); j++)
+            {
+                data = this->m_datas[i][j] + mat.GetValue(i, j);
+                result.SetValue(i, j, data);
+            }
+        }
 	}
+    else if(mat.GetNumCol()==1)
+    {
+        for (int i = 0; i < this->GetNumRow(); i++)
+        {
+            for (int j = 0; j < this->GetNumCol(); j++)
+            {
+                data = this->m_datas[i][j] + mat.GetValue(i, 0);
+                result.SetValue(i, j, data);
+            }
+        }
+    }
+    else if(mat.GetNumRow()==1)
+    {
+        for (int j = 0; j < this->GetNumCol(); j++)
+        {
+            for (int i = 0; i < this->GetNumRow(); i++)
+            {
+                data = this->m_datas[i][j] + mat.GetValue(0, j);
+                result.SetValue(i, j, data);
+            }
+        }
+    }
+    else
+    {
+        std::cout << "Can't add (" << this->GetNumRow() << ", " << this->GetNumCol()
+            << ") * (" << mat.GetNumRow() << ", " << mat.GetNumCol() << ")" << std::endl;
+        return result;
+    }
 
-	for (int i = 0; i < this->GetNumRow(); i++)
-	{
-		for (int j = 0; j < this->GetNumCol(); j++)
-		{
-			data = this->m_datas[i][j] + mat.GetValue(i, j);
-			result.SetValue(i, j, data);
-		}
-	}
 	return result;
 }
 
+Matrix Matrix::operator-(const Matrix & mat)
+{
+    Matrix result(this->GetNumRow(), this->GetNumCol(), false);
+    double data;
+
+    if (this->GetNumCol() == mat.GetNumCol() && this->GetNumRow() == mat.GetNumRow())
+    {
+        for (int i = 0; i < this->GetNumRow(); i++)
+        {
+            for (int j = 0; j < this->GetNumCol(); j++)
+            {
+                data = this->m_datas[i][j] - mat.GetValue(i, j);
+                result.SetValue(i, j, data);
+            }
+        }
+    }
+    else if(mat.GetNumCol()==1)
+    {
+        for (int i = 0; i < this->GetNumRow(); i++)
+        {
+            for (int j = 0; j < this->GetNumCol(); j++)
+            {
+                data = this->m_datas[i][j] - mat.GetValue(i, 0);
+                result.SetValue(i, j, data);
+            }
+        }
+    }
+    else if(mat.GetNumRow()==1)
+    {
+        for (int j = 0; j < this->GetNumCol(); j++)
+        {
+            for (int i = 0; i < this->GetNumRow(); i++)
+            {
+                data = this->m_datas[i][j] - mat.GetValue(0, j);
+                result.SetValue(i, j, data);
+            }
+        }
+    }
+    else
+    {
+        std::cout << "Can't substract (" << this->GetNumRow() << ", " << this->GetNumCol()
+            << ") * (" << mat.GetNumRow() << ", " << mat.GetNumCol() << ")" << std::endl;
+        return result;
+    }
+
+    return result;
+}
 
 void Matrix::operator = (const Matrix& mat)
 {
@@ -249,25 +308,43 @@ void Matrix::operator = (const Matrix& mat)
     }
 }
 
-void Matrix::Type() const
+Matrix Matrix::MaxMatArr()
 {
-    std::cout << "(" << GetNumRow() << ", " << GetNumCol() << ")" << std::endl;
+    Matrix result = Matrix(GetNumCol(), 1, false);
+    double maxValue;
+    for(int j=0; j< GetNumCol(); ++j)
+    {   maxValue = 0;
+        for(int i=0; i< GetNumRow(); ++i)
+        {
+            if(maxValue <  GetValue(i, j))
+            {
+                maxValue = GetValue(i, j);
+            }
+        }
+        result.SetValue(j, 0, maxValue);
+    }
+    return result;
 }
 
-void Matrix::TransToOneHot(int numClasses)
+void Matrix::Type() const
 {
-    if(this->GetNumRow() != 1)
-    {
-        std::cout<<"Can't transform this matrix to OneHotLabel";
-    }
-    else
-    {
-        Matrix result(numClasses, this->GetNumCol(), false);
-        result.Type();
-        for(int i=0; i < this->GetNumCol(); ++i)
-        {
-            result.SetValue(m_datas[0][i], i, 1.0);
-        }
-        (*this) = result;
-    }
+    std::cout << std::endl << "=====MATRIX SHAPE======" << std::endl;
+    std::cout << "[" << GetNumRow() << ", " << GetNumCol() << "]" << std::endl;
 }
+
+const std::ostream &operator << (std::ostream &out, const Matrix &mat){
+    out << std::endl << "=====MATRIX VALUE======" << std::endl;
+    out << "[";
+    for (int i = 0; i < mat.GetNumRow(); i++)
+    {
+        out << std::endl << "[";
+        for (int j = 0; j < mat.GetNumCol(); j++)
+        {
+            out << mat.GetValue(i, j) << " ";
+        }
+        out << "]";
+    }
+    out << "]" << std::endl;
+    return out;
+}
+

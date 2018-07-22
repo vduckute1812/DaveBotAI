@@ -2,52 +2,36 @@
 #include <ctime>
 #include "Matrix.h"
 #include "Layer.h"
+#include "NeuralNetwork.h"
 
 int main()
 {
-    Matrix A(3, 2, true);
+    Matrix X(2, 5, true);
+    std::vector<double> labels;
+    labels.push_back(0);
+    labels.push_back(0);
+    labels.push_back(1);
+    labels.push_back(1);
+    labels.push_back(2);
+
+    Matrix W(2, 10, true);
+    Matrix b(10, 1, true);
+
+    Matrix A =  W.T().Dot(X) + b;
+    std::cout << W.T().Dot(X);
+    std::cout << b;
     std::cout << A;
+    A.Type();
 
-    Matrix B(3, 2, true);
-    Matrix C = A*B;
-    std::cout << C;
+    std::vector<int> hiddenNode;
+    hiddenNode.push_back(10);
+    hiddenNode.push_back(3);
 
-    Matrix D = C.T();
-    std::cout << D;
+    Matrix _labels = Matrix(labels);
 
-    Matrix E = A.Dot(D);
-    std::cout << E;
-
-    Matrix F;
-    F = E;
-    std::cout<< F;
-
-    F.Type();
-
-    Layer lb(A, B);
-
-    std::cout << lb.GetDatas();
-    std::vector<double> tmp;
-    std::vector<std::vector<double> >value;
-    double k = 0.0;
-
-    for(int i=0; i< 4; ++i)
-    {
-        for(int j = 0; j < 20; ++j)
-        {
-            tmp.push_back(k);
-        }
-        ++k;
-    }
-
-    value.push_back(tmp);
-    Matrix label(value);
-    std::cout<<label;
-    label.Type();
-    lb.SetLabels(label);
-
-    std::cout<<lb.GetLabels();
-
+    NeuralNetwork NN(X, _labels, hiddenNode);
+    NN.CheckAlgorithm();
+    std::cout << NN.GetLabels();
     getchar();
 	return 0;
 }
