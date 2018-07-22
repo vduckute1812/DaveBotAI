@@ -10,38 +10,40 @@ Layer::Layer()
 // Input layer
 Layer::Layer(const Matrix& pointData, int numNextNode, bool isFinal)
 {
-    m_numDim = pointData.GetNumRow();
-    m_numNodes = pointData.GetNumCol();
+    m_numNodes = pointData.GetNumRow();
+    m_numDim = pointData.GetNumCol();
 
     X = pointData;
-    std::cout << std::endl << "X::: ";
-    std::cout << X;
-
-    std::cout << "b::: ";
     b = Matrix(numNextNode, 1, false);
-    std::cout << b;
-
-    std::cout << "W::: ";
-    W = Matrix(m_numDim, numNextNode, true);
-    std::cout << W;
-
-    std::cout << "Z::: ";
+    W = Matrix(m_numNodes, numNextNode, true);
     Z = W.T().Dot(X) + b;       // Z = W_T.X + B
-    std::cout << Z;
 
-    std::cout << "A::: ";
-    if(isFinal)
+    if(isFinal){
         A = SoftMax(Z);
+    }
     else{
         A = ReLuFunc(Z);
     }
-    std::cout << A;
 }
 
 void Layer::SetBias(const Matrix& mat)
 {
     b = mat;
 }
+
+void Layer::Feedforward()
+{
+    // Update A and Z
+    Z = W.T().Dot(X) + b;       // Z = W_T.X + B
+
+    if(isFinal){
+        A = SoftMax(Z);
+    }
+    else{
+        A = ReLuFunc(Z);
+    }
+}
+
 
 void Layer::SetDatas(const Matrix& mat)
 {

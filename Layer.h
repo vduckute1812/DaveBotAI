@@ -34,6 +34,7 @@ public:
     Matrix GetWeights() const;
     Matrix GetActFuncVal() const;
     int GetNumNode() const;
+
 };
 
 #endif // LAYER_H

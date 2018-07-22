@@ -84,3 +84,4 @@ void NeuralNetwork::CheckAlgorithm() const
         m_listLayer[i].GetWeights().Type();
     }
 }
+

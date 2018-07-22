@@ -1,7 +1,9 @@
 #include <iostream>
 #include <ctime>
+
 #include "Matrix.h"
 #include "Layer.h"
+#include "inputreader.h"
 #include "NeuralNetwork.h"
 
 int main()
@@ -31,7 +33,8 @@ int main()
 
     NeuralNetwork NN(X, _labels, hiddenNode);
     NN.CheckAlgorithm();
-    std::cout << NN.GetLabels();
+
+
     getchar();
-	return 0;
+    return 0;
 }
