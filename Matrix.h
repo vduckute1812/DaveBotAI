@@ -4,6 +4,7 @@
 #include <vector>
 #include <iostream>
 #include <sstream>
+#include <math.h>
 
 class Matrix
 {
@@ -25,12 +26,15 @@ public:
 	void SetValue(int r, int c, double data);
     Matrix MaxMatArr();
 
-    Matrix T();
-    Matrix Dot(const Matrix& mat);
-    Matrix operator*(const Matrix& mat);
-	Matrix operator*(const double& alpha);
-	Matrix operator+(const Matrix& mat);
-    Matrix operator-(const Matrix& mat);
+    Matrix T() const;
+    Matrix Dot(const Matrix& mat) const;
+    Matrix operator*(const Matrix& mat) const;
+    Matrix operator*(const double& alpha) const;
+    Matrix operator+(const Matrix& mat) const;
+    Matrix operator-(const Matrix& mat) const;
+    Matrix logarit() const;
+    Matrix Sum(int direct) const;
+    double SumAllElem() const;
     void operator=(const Matrix& mat);
     double GetValue(int r, int c) const;
     void Type()const;

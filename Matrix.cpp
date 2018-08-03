@@ -114,7 +114,7 @@ void Matrix::PrintToConsole()
     }
 }
 
-Matrix Matrix::Dot(const Matrix& mat)
+Matrix Matrix::Dot(const Matrix& mat) const
 {
     Matrix result(this->GetNumRow(), mat.GetNumCol(), false);
     double data;
@@ -141,7 +141,7 @@ Matrix Matrix::Dot(const Matrix& mat)
     return result;
 }
 
-Matrix Matrix::T()
+Matrix Matrix::T() const
 {
     Matrix result(this->GetNumCol(), this->GetNumRow(), false);
 
@@ -155,7 +155,7 @@ Matrix Matrix::T()
     return result;
 }
 
-Matrix Matrix::operator*(const Matrix & mat)
+Matrix Matrix::operator*(const Matrix & mat) const
 {
     Matrix result(this->GetNumRow(), this->GetNumCol(), false);
     double data;
@@ -177,7 +177,7 @@ Matrix Matrix::operator*(const Matrix & mat)
     return result;
 }
 
-Matrix Matrix::operator*(const double & _alpha)
+Matrix Matrix::operator*(const double & _alpha) const
 {
 	Matrix result = *this;
 	double data;
@@ -193,7 +193,7 @@ Matrix Matrix::operator*(const double & _alpha)
 	return result;
 }
 
-Matrix Matrix::operator+(const Matrix & mat)
+Matrix Matrix::operator+(const Matrix & mat) const
 {
 	Matrix result(this->GetNumRow(), this->GetNumCol(), false);
 	double data;
@@ -241,7 +241,7 @@ Matrix Matrix::operator+(const Matrix & mat)
 	return result;
 }
 
-Matrix Matrix::operator-(const Matrix & mat)
+Matrix Matrix::operator-(const Matrix & mat) const
 {
     Matrix result(this->GetNumRow(), this->GetNumCol(), false);
     double data;
@@ -348,3 +348,64 @@ const std::ostream &operator << (std::ostream &out, const Matrix &mat){
     return out;
 }
 
+
+
+Matrix Matrix::Sum(int dim) const
+{
+    Matrix result;
+    double sum;
+
+    if(dim == 0) // X dimention
+    {
+        result = Matrix(GetNumCol(), 1, false);
+        for(int i=0; i< GetNumCol(); ++i)
+        {
+            sum = 0;
+            for (int j=0; j< GetNumRow(); ++j)
+            {
+                sum += GetValue(j, i);
+            }
+            result.SetValue(i, 0, sum);
+        }
+    }
+    else if(dim == 1)           // Y dimention
+    {
+        result = Matrix( GetNumRow(), 1, false);
+        for(int i=0; i< GetNumRow(); ++i)
+        {
+            sum = 0;
+            for (int j=0; j< GetNumCol(); ++j)
+            {
+                sum+= GetValue(i, j);
+            }
+            result.SetValue(i, 0, sum);
+        }
+    }
+    return result;
+}
+
+double Matrix::SumAllElem() const
+{
+    double sum = 0;
+    for(int i=0; i< GetNumRow(); ++i)
+    {
+        for (int j=0; j< GetNumCol(); ++j)
+        {
+            sum+=GetValue(i, j);
+        }
+    }
+    return sum;
+}
+
+Matrix Matrix::logarit() const
+{
+    Matrix result(GetNumRow(), GetNumCol(), false);
+    for(int i = 0; i < GetNumRow(); ++i)
+    {
+        for(int j = 0; j < GetNumCol(); ++j)
+        {
+            result.SetValue(i, j, log(GetValue(i, j)));
+        }
+    }
+    return result;
+}

@@ -2,23 +2,24 @@
 
 Layer::Layer()
 {
-    m_numDim = 0;
+    m_numPoints = 0;
     m_numNodes = 0;
 }
 
 
 // Input layer
-Layer::Layer(const Matrix& pointData, int numNextNode, bool isFinal)
+Layer::Layer(const Matrix& pointData, int numNextNode, int indexLayer, bool isFinal)
 {
     m_numNodes = pointData.GetNumRow();
-    m_numDim = pointData.GetNumCol();
+    m_numPoints = pointData.GetNumCol();
+    m_isFinal = isFinal;
+    m_indexLayer = indexLayer;
 
-    X = pointData;
-    b = Matrix(numNextNode, 1, false);
+    b = Matrix(numNextNode, 1, false);              // Z[L] = W.T[L]*A[L-1] + b[L]
     W = Matrix(m_numNodes, numNextNode, true);
-    Z = W.T().Dot(X) + b;       // Z = W_T.X + B
+    Z = W.T().Dot(pointData) + b;                           // Z = W_T.X + B
 
-    if(isFinal){
+    if(isFinal){                                    // A[L] = f(Z[L])
         A = SoftMax(Z);
     }
     else{
@@ -31,33 +32,9 @@ void Layer::SetBias(const Matrix& mat)
     b = mat;
 }
 
-void Layer::Feedforward()
-{
-    // Update A and Z
-    Z = W.T().Dot(X) + b;       // Z = W_T.X + B
-
-    if(isFinal){
-        A = SoftMax(Z);
-    }
-    else{
-        A = ReLuFunc(Z);
-    }
-}
-
-
-void Layer::SetDatas(const Matrix& mat)
-{
-    X = mat;
-}
-
 void Layer::SetWeights(const Matrix& mat)
 {
     W = mat;
-}
-
-void Layer::SetNumNode(int numNode)
-{
-    m_numNodes = numNode;
 }
 
 Matrix Layer::GetBias() const
@@ -65,23 +42,15 @@ Matrix Layer::GetBias() const
     return b;
 }
 
-Matrix Layer::GetDatas() const
-{
-    return X;
-}
-
 Matrix Layer::GetWeights() const
 {
     return W;
 }
 
-int Layer::GetNumNode() const
-{
-    return m_numNodes;
-}
-
 Matrix Layer::ReLuFunc(const Matrix& mat)
 {
+    std::cout << "=============RECTIFY LINEAR UNIT===========";
+
     Matrix result = Matrix(mat.GetNumRow(), mat.GetNumCol(), false);
     double value;
 
@@ -96,38 +65,89 @@ Matrix Layer::ReLuFunc(const Matrix& mat)
             }
         }
     }
+
     return result;
 }
 
-
+Matrix Layer::GetE() const
+{
+    return E;
+}
 
 // Stable Softmax
 Matrix Layer::SoftMax(const Matrix& mat)
 {
+    std::cout << "============SOFTMAX===========";
     Matrix result = mat;
     result = result - result.MaxMatArr().T();
-    std::cout << result;
 
-    double maxValue;
+    double sumValue;
 
     for(int j =0; j< mat.GetNumCol(); ++j)
-    {   maxValue = 0;
+    {   sumValue = 0;
 
         for(int i=0; i< mat.GetNumRow(); ++i)
         {
             result.SetValue(i, j, exp(result.GetValue(i, j)));
-            maxValue+=result.GetValue(i, j);
+            sumValue+=result.GetValue(i, j);
         }
 
         for(int i=0; i< mat.GetNumRow(); ++i)
         {
-            result.SetValue(i, j, result.GetValue(i, j)/maxValue);
+            result.SetValue(i, j, result.GetValue(i, j)/sumValue);
         }
     }
+    std::cout<<result;
+
     return result;
 }
 
 Matrix Layer::GetActFuncVal() const
 {
     return A;
+}
+
+void Layer::FeedForward(const Matrix& pointData)
+{
+    Z = W.T().Dot(pointData) + b;
+
+    if(m_isFinal){                                   // A[L] = f(Z[L])
+        A = SoftMax(Z);
+    }
+    else{
+        A = ReLuFunc(Z);
+    }
+    std::cout << "===Z====";
+    Z.Type();
+    std::cout << "===A====";
+    A.Type();
+}
+
+void Layer::Backpropagation(const Matrix& E_L, const Matrix& Weight_L, const Matrix& A_pre, double eta)
+{
+
+    if(m_isFinal)
+    {
+        E = (A - E_L) * (1.0 / m_numPoints);
+    }
+    else
+    {
+        E = ReLuFunc(Weight_L.Dot(E_L));
+    }
+
+    dW = A_pre.Dot(E.T());
+    db = E.Sum(1);
+    W = W - dW*eta;
+    b = b - db*eta;
+    std::cout << "===E====";
+    E.Type();
+    std::cout << "===W====";
+    W.Type();
+    std::cout << "===b====";
+    b.Type();
+}
+
+int Layer::GetIndexLayer() const
+{
+    return m_indexLayer;
 }

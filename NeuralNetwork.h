@@ -9,6 +9,8 @@ private:
 
     std::vector<Layer> m_listLayer;
     int m_numClass;
+    double m_eta;
+    Matrix X;
     Matrix Y;       // [d(l), 1] It's a vector with d(l) elements
     void TransToOneHot(int numClasses);
 
@@ -21,6 +23,10 @@ public:
     int GetNumClass() const;
     void SetLabels(const Matrix& mat);
     void SetLabels(const std::vector<double>& labels);
+    void CalFeedForward();
+    void CalBackpropa();
+    double GetCost();
+    void Train(int numStep, double eta);
 };
 
 #endif
